@@ -56,6 +56,7 @@ function reset() {
   secretOn = false; projs = []; holding = false; holdT = 0;
   dying = false; deadSprite = false; endPhase = 0; sparedEnd = false;
   for (const id of UI_IDS) { const el = document.getElementById(id); el.style.visibility = ''; if (id !== 'spare' && id !== 'fire') el.style.display = ''; }
+  setMenu('visible'); // joystick hidden on the Act/Attack menu
   say('* Susie cracks her knuckles.');
   updateHud();
 }
@@ -787,7 +788,10 @@ function hideUiExceptRestart() {
 }
 function startSpareEnding() {
   stopMusic();
-  sparedEnd = true; endT = 0; setMenu('hidden');
+  sparedEnd = true; endT = 0; setMenu('visible');
+  for (const id of ['hud', 'hint', 'joy', 'act', 'attack']) document.getElementById(id).style.visibility = 'hidden';
+  document.getElementById('msg').style.visibility = 'visible';
+  document.getElementById('joy').style.display = 'none';
   shards = []; missiles = []; projs = []; susieTimer = 0;
   say('* Susie lowers her axe. You spared her.');
 }
@@ -806,6 +810,7 @@ function drawKris() {
 }
 function spareFrame() {
   endT = Math.min(endT + 1, 300);
+  document.getElementById('joy').style.display = 'none';
   const t = endT;
   const DOWN_END = 60, FADE_END = 100, WHITE_END = 140, RISE_END = 240;
   const cx = W / 2, cy = SUSIE_Y + SUSIE_H * 0.5 + 20;
